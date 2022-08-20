@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../backend/classes.dart';
+import '../backend/methods/general_methods.dart';
+import '../backend/methods/saving_methods.dart';
 import 'generalwidgets.dart';
-import '../backend/models.dart';
-import '../backend/variables.dart';
 import '../backend/theme.dart';
+
+int graphLayoutIndex = 0;
 
 class DataScreen extends StatefulWidget {
   const DataScreen({Key? key}) : super(key: key);
@@ -26,7 +29,7 @@ class _DataScreenState extends State<DataScreen> {
           child: GasChart(
             title: 'Multiple Gas',
             stream: gasStream,
-            graphData: gasGraphArchive,
+            graphData: gasChartData,
           ),
         );
       case 1:
@@ -35,7 +38,7 @@ class _DataScreenState extends State<DataScreen> {
           child: SpectroChart(
             title: 'VIS/NIR Reflectance Spectrometer',
             stream: spectro1Stream,
-            graphData: spectroGraph1Archive,
+            graphData: spectroChartData,
           ),
         );
       default:
@@ -44,7 +47,7 @@ class _DataScreenState extends State<DataScreen> {
           child: GasChart(
             title: 'Multiple Gas',
             stream: gasStream,
-            graphData: gasGraphArchive,
+            graphData: gasChartData,
           ),
         );
     }
@@ -89,17 +92,28 @@ class _DataScreenState extends State<DataScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              for (int i = 0; i < dataGraphAmount; i++)
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: GraphLayoutButton(
-                                      layout: i,
-                                      notifyParent: refresh,
-                                    ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: GraphLayoutButton(
+                                    title: 'Multiple Gas',
+                                    layout: 0,
+                                    notifyParent: refresh,
                                   ),
                                 ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: GraphLayoutButton(
+                                    title: 'VIS/NIR Ref. Spec.',
+                                    layout: 1,
+                                    notifyParent: refresh,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                           Container(
@@ -327,10 +341,12 @@ class TiltBox extends StatelessWidget {
 
 // GRAPH SELECTION BUTTON
 class GraphLayoutButton extends StatelessWidget {
+  final String title;
   final int layout;
   final Function() notifyParent;
   const GraphLayoutButton({
     Key? key,
+    required this.title,
     required this.layout,
     required this.notifyParent,
   }) : super(key: key);
@@ -354,7 +370,7 @@ class GraphLayoutButton extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
         ),
         child: Text(
-          dataGraphTitles[layout],
+          title,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
@@ -416,7 +432,7 @@ class StatusBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'X Coord.',
-                    stream: locationStream,
+                    stream: statusStream,
                     value: 'x',
                   ),
                 ),
@@ -432,7 +448,7 @@ class StatusBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'Y Coord.',
-                    stream: locationStream,
+                    stream: statusStream,
                     value: 'y',
                   ),
                 ),
@@ -442,7 +458,7 @@ class StatusBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'Z Coord.',
-                    stream: locationStream,
+                    stream: statusStream,
                     value: 'z',
                   ),
                 ),
@@ -538,7 +554,7 @@ class AtmospBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'CO Amount (ppm)',
-                    stream: someGasStream,
+                    stream: gasStream,
                     value: 'ppm_co',
                   ),
                 ),
@@ -548,7 +564,7 @@ class AtmospBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'CO2 Amount (ppm)',
-                    stream: someGasStream,
+                    stream: gasStream,
                     value: 'ppm_co2',
                   ),
                 ),
@@ -564,7 +580,7 @@ class AtmospBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'CH4 Amount (ppm)',
-                    stream: someGasStream,
+                    stream: gasStream,
                     value: 'ppm_ch4',
                   ),
                 ),
@@ -574,7 +590,7 @@ class AtmospBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'NO2 Amount (ppm)',
-                    stream: someGasStream,
+                    stream: gasStream,
                     value: 'ppm_no2',
                   ),
                 ),
@@ -636,7 +652,7 @@ class SoilBox extends StatelessWidget {
                   child: DataBox(
                     name: 'N Amount (mg/L)',
                     stream: soilStream,
-                    value: 'n_amount',
+                    value: 'n',
                   ),
                 ),
               ),
@@ -652,7 +668,7 @@ class SoilBox extends StatelessWidget {
                   child: DataBox(
                     name: 'P Amount (mg/L)',
                     stream: soilStream,
-                    value: 'p_amount',
+                    value: 'p',
                   ),
                 ),
               ),
@@ -662,7 +678,7 @@ class SoilBox extends StatelessWidget {
                   child: DataBox(
                     name: 'K Amount (mg/L)',
                     stream: soilStream,
-                    value: 'k_amount',
+                    value: 'k',
                   ),
                 ),
               ),
@@ -723,16 +739,8 @@ class GasChart extends StatelessWidget {
             child: StreamBuilder(
               stream: stream,
               builder: (context, snapshot) {
-                List<Gas> showngraph;
-                DateTime currentTime;
-                if (snapshot.hasData) {
-                  Gas newGas = snapshot.data as Gas;
-                  showngraph = graphData;
-                  currentTime = newGas.time!;
-                } else {
-                  showngraph = emptyGasGraph;
-                  currentTime = DateTime(2000, 1, 1, 0, 0, 10, 0, 0);
-                }
+                List<Gas> showngraph = graphData;
+                DateTime currentTime = DateTime.now();
                 return SfCartesianChart(
                   legend:
                       Legend(isVisible: true, position: LegendPosition.bottom),
@@ -895,7 +903,7 @@ class GasChart extends StatelessWidget {
 class SpectroChart extends StatelessWidget {
   final String title;
   final Stream stream;
-  final List<List<Spectro1>> graphData;
+  final List<Spectro> graphData;
   const SpectroChart({
     Key? key,
     required this.title,
@@ -940,22 +948,16 @@ class SpectroChart extends StatelessWidget {
             child: StreamBuilder(
               stream: stream,
               builder: (context, snapshot) {
-                List<Spectro1> showngraph;
-                if (snapshot.hasData) {
-                  Spectro1 newSpectro = snapshot.data as Spectro1;
-                  showngraph = graphData[newSpectro.id - 1];
-                } else {
-                  showngraph = emptySpectro1Graph;
-                }
+                List<Spectro> showngraph = graphData;
                 return SfCartesianChart(
                   tooltipBehavior: TooltipBehavior(enable: true),
-                  series: <ChartSeries<Spectro1, double>>[
+                  series: <ChartSeries<Spectro, double>>[
                     LineSeries(
                       name: 'Value',
                       color: Color(roverDarkCoral),
                       dataSource: showngraph,
-                      xValueMapper: (Spectro1 dot, _) => dot.wavelength,
-                      yValueMapper: (Spectro1 dot, _) => dot.reflectance,
+                      xValueMapper: (Spectro dot, _) => dot.wavelength,
+                      yValueMapper: (Spectro dot, _) => dot.reflectance,
                       dataLabelSettings:
                           const DataLabelSettings(isVisible: false),
                       enableTooltip: true,

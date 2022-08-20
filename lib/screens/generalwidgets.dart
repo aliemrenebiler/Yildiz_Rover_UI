@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../backend/variables.dart';
+import '../backend/methods/general_methods.dart';
 import '../backend/theme.dart';
 
 class TopNavBar extends StatelessWidget {

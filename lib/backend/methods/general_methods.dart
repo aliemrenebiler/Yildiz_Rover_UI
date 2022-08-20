@@ -1,0 +1,81 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart';
+
+import 'saving_methods.dart';
+
+// SETTINGS
+String connectedIP = 'localhost';
+String dataHttpPort = '3000';
+
+// CONTROLLERS
+StreamController<Map<String, dynamic>> batteryController =
+    StreamController<Map<String, dynamic>>.broadcast();
+Stream<Map<String, dynamic>> batteryStream = batteryController.stream;
+
+StreamController<Map<String, dynamic>> webCameraController =
+    StreamController<Map<String, dynamic>>.broadcast();
+Stream<Map<String, dynamic>> webCameraStream = webCameraController.stream;
+
+StreamController<Map<String, dynamic>> statusController =
+    StreamController<Map<String, dynamic>>.broadcast();
+Stream<Map<String, dynamic>> statusStream = statusController.stream;
+
+StreamController<Map<String, dynamic>> atmosphereController =
+    StreamController<Map<String, dynamic>>.broadcast();
+Stream<Map<String, dynamic>> atmosphereStream = atmosphereController.stream;
+
+StreamController<Map<String, dynamic>> soilController =
+    StreamController<Map<String, dynamic>>.broadcast();
+Stream<Map<String, dynamic>> soilStream = soilController.stream;
+
+StreamController<Map<String, dynamic>> gasController =
+    StreamController<Map<String, dynamic>>.broadcast();
+Stream<Map<String, dynamic>> gasStream = gasController.stream;
+
+StreamController<Map<String, dynamic>> spectroController =
+    StreamController<Map<String, dynamic>>.broadcast();
+Stream<Map<String, dynamic>> spectro1Stream = spectroController.stream;
+
+// JSON DATA
+Map<String, dynamic> jsonData = {};
+
+// FUNCTIONS
+getData(String url) async {
+  var uri = Uri.parse(url);
+  Response response;
+  try {
+    response = await get(uri);
+    if (response.statusCode == 200) {
+      jsonData = jsonDecode(response.body);
+      int nullData = 0;
+
+      if (int.parse(jsonData['battery']['id']) != nullData) {
+        batteryController.add(jsonData['battery']);
+      }
+      if (int.parse(jsonData['camera']['id']) != nullData) {
+        webCameraController.add(jsonData['camera']);
+      }
+      if (int.parse(jsonData['status']['id']) != nullData) {
+        statusController.add(jsonData['status']);
+      }
+      if (int.parse(jsonData['atmosphere']['id']) != nullData) {
+        atmosphereController.add(jsonData['atmosphere']);
+      }
+      if (int.parse(jsonData['spectro']['id']) != nullData) {
+        spectroController.add(jsonData['spectro']);
+      }
+      if (int.parse(jsonData['soil']['id']) != nullData) {
+        soilController.add(jsonData['soil']);
+      }
+      if (int.parse(jsonData['gas']['id']) != nullData) {
+        saveGasData(jsonData['gas']);
+        gasController.add(jsonData['gas']);
+      }
+    } else {
+      // WILL BE CHANGED! <==========================================================================================
+    }
+  } catch (err) {
+    // WILL BE CHANGED! <==========================================================================================
+  }
+}

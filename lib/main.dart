@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'backend/methods.dart';
-import 'backend/variables.dart';
-
+import 'backend/methods/general_methods.dart';
 import 'screens/homesreen.dart';
 import 'screens/datascreen.dart';
 import 'screens/camerascreen.dart';
@@ -94,4 +92,7 @@ class _MyAppState extends State<MyApp> {
 To enable/disable Mac/Windows/Linux app
 - Use: flutter config --enable-linux-desktop
 - Use: flutter config --no-enable-linux-desktop
+
+CAN BE USED LATER:
+- Dynamic column amount: https://flutterhq.com/questions-and-answers/1293/flutter-how-can-i-add-dynamic-number-of-columns-depending-on-device-width-or-orientation
 */

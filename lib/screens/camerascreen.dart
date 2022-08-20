@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:webviewx/webviewx.dart';
 
-import '../backend/models.dart';
+import '../backend/methods/general_methods.dart';
 import 'generalwidgets.dart';
 import '../backend/theme.dart';
-import '../backend/variables.dart';
-import '../backend/methods.dart';
+import '../backend/methods/camera_methods.dart';
 
 class CameraScreen extends StatelessWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -32,9 +31,10 @@ class CameraScreen extends StatelessWidget {
                     int cameraCount;
                     List<int> allCameras = [];
                     if (snapshot.hasData) {
-                      WebCamera newData = snapshot.data as WebCamera;
-                      cameraCount = newData.id;
-                      allCameras = getCameraIDs(newData.cameras);
+                      Map<String, dynamic> newData =
+                          snapshot.data as Map<String, dynamic>;
+                      cameraCount = newData['id'];
+                      allCameras = getCameraIDs(newData['cameras'].toString());
                     } else {
                       cameraCount = 0;
                     }
@@ -117,111 +117,3 @@ class CameraBox extends StatelessWidget {
     );
   }
 }
-
-/*
-// SAMPLE BOXES
-class ChooseCameraBox extends StatelessWidget {
-  final int cameraID;
-  final Function() notifyParent;
-  const ChooseCameraBox({
-    Key? key,
-    required this.cameraID,
-    required this.notifyParent,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: Color(roverDarkRed),
-        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.all(5),
-            height: 40,
-            child: Text(
-              "CAMERA #${cameraID + 1}",
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: roverFontL,
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              for (int i = 0; i < 8; i++)
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    child: CameraLayoutButton(
-                      layoutID: i,
-                      cameraID: cameraID,
-                      notifyParent: notifyParent,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CameraLayoutButton extends StatelessWidget {
-  final int layoutID;
-  final int cameraID;
-  final Function() notifyParent;
-  const CameraLayoutButton({
-    Key? key,
-    required this.layoutID,
-    required this.cameraID,
-    required this.notifyParent,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    String buttonText;
-    buttonText = layoutID.toString();
-
-    return InkWell(
-      onTap: () {
-        if (cameraIDs[cameraID] != layoutID) {
-          cameraIDs[cameraID] = layoutID;
-          cameraUrls[cameraID] =
-              'http://$connectedIP:8080/stream?topic=/camera$layoutID/image_raw';
-          notifyParent();
-        }
-      },
-      child: Container(
-        alignment: Alignment.center,
-        height: 40,
-        decoration: BoxDecoration(
-          color: cameraIDs[cameraID] != layoutID
-              ? Color(roverCoral)
-              : Color(roverDarkCoral),
-          borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
-        ),
-        child: Text(
-          buttonText,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: roverFontM,
-          ),
-        ),
-      ),
-    );
-  }
-}
-*/
