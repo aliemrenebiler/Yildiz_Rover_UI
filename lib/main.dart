@@ -91,6 +91,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 /*
-To enable Mac/Windows/Linux app
+To enable/disable Mac/Windows/Linux app
 - Use: flutter config --enable-linux-desktop
+- Use: flutter config --no-enable-linux-desktop
 */
