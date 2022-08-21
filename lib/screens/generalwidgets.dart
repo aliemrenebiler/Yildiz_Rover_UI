@@ -102,7 +102,7 @@ class BatteryBox extends StatelessWidget {
             }
             batteryText = '%$batteryPrecent';
           } else {
-            batteryPrecent = 5;
+            batteryPrecent = 50;
             batteryText = '---';
           }
           return Row(
