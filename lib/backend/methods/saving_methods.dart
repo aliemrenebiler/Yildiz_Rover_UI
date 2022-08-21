@@ -2,16 +2,11 @@ import '../classes.dart';
 
 // DATA PAGE DATA
 List<Gas> gasChartData = [];
-List<Spectro> spectroChartData = [];
 
 // ARCHIVE PAGE DATA
 int sampleAmount = 0;
-List<SoilSample> soilSamples = [
-  SoilSample(
-    id: 1,
-    soil: Soil(id: 0, temperature: 1, n: 2, p: 3, k: 4),
-    spectro: spectroChartData,
-  ),
+List<Soil> soilSamples = [
+  Soil(id: 1, temperature: 1, n: 2, p: 3, k: 4),
 ];
 Gas avrgGas = Gas(
   id: 0,
@@ -57,10 +52,5 @@ saveGasData(Map<String, dynamic> newData) {
 saveSoilData(Map<String, dynamic> newData) {
   Soil newSoil = Soil.fromJson(newData);
   sampleAmount += 1;
-  SoilSample newSample =
-      SoilSample(id: sampleAmount, soil: newSoil, spectro: spectroChartData);
-  soilSamples.add(newSample);
+  soilSamples.add(newSoil);
 }
-
-// WILL BE CHANGED <===========================================================================0
-saveSpectroData() {}

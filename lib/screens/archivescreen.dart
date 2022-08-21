@@ -66,7 +66,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                         children: [
                           Container(
                             padding: const EdgeInsets.all(5),
-                            child: const SamplesBox(),
+                            child: const AllSamplesBox(),
                           )
                         ],
                       ),
@@ -409,7 +409,7 @@ class SampleBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: StaticDataBox(
                     name: 'Temperature (°C)',
-                    value: soilSamples[sample].soil.temperature.toString(),
+                    value: soilSamples[sample].temperature.toString(),
                   ),
                 ),
               ),
@@ -418,7 +418,7 @@ class SampleBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: StaticDataBox(
                     name: 'N Amount (mg/L)',
-                    value: soilSamples[sample].soil.n.toString(),
+                    value: soilSamples[sample].n.toString(),
                   ),
                 ),
               ),
@@ -427,7 +427,7 @@ class SampleBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: StaticDataBox(
                     name: 'P Amount (mg/L)',
-                    value: soilSamples[sample].soil.p.toString(),
+                    value: soilSamples[sample].p.toString(),
                   ),
                 ),
               ),
@@ -436,7 +436,7 @@ class SampleBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: StaticDataBox(
                     name: 'K Amount (mg/L)',
-                    value: soilSamples[sample].soil.k.toString(),
+                    value: soilSamples[sample].k.toString(),
                   ),
                 ),
               ),
@@ -448,8 +448,8 @@ class SampleBox extends StatelessWidget {
   }
 }
 
-class SamplesBox extends StatelessWidget {
-  const SamplesBox({
+class AllSamplesBox extends StatelessWidget {
+  const AllSamplesBox({
     Key? key,
   }) : super(key: key);
 

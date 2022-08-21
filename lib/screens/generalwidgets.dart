@@ -18,6 +18,7 @@ class TopNavBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
+            flex: 2,
             child: InkWell(
               onTap: () {
                 Navigator.pop(context);
@@ -36,10 +37,37 @@ class TopNavBar extends StatelessWidget {
               ),
             ),
           ),
-          const BatteryBox(),
-          const TopNavBarButton(text: 'DATA', nextRoute: '/datascreen'),
-          const TopNavBarButton(text: 'CAMERA', nextRoute: '/camerascreen'),
-          const TopNavBarButton(text: 'ARCHIVE', nextRoute: '/archivescreen'),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              child: const BatteryBox(),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              child:
+                  const TopNavBarButton(text: 'DATA', nextRoute: '/datascreen'),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              child: const TopNavBarButton(
+                  text: 'CAMERA', nextRoute: '/camerascreen'),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              child: const TopNavBarButton(
+                  text: 'ARCHIVE', nextRoute: '/archivescreen'),
+            ),
+          ),
         ],
       ),
     );
@@ -52,7 +80,6 @@ class BatteryBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(5),
       padding: const EdgeInsets.all(3),
       height: 40,
       decoration: BoxDecoration(
@@ -82,51 +109,58 @@ class BatteryBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.all(3),
-                width: MediaQuery.of(context).size.width / 25,
-                child: Text(
-                  batteryText,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(3),
+                  child: Text(
+                    batteryText,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
               ),
-              Container(
-                height: 28,
-                width: MediaQuery.of(context).size.width / 6 -
-                    MediaQuery.of(context).size.width / 25,
-                margin: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  color: Color(roverLightGrey),
-                  borderRadius: BorderRadius.all(Radius.circular(roverRadiusM)),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 28,
-                      width: (MediaQuery.of(context).size.width / 6 -
-                              MediaQuery.of(context).size.width / 25) /
-                          100 *
-                          batteryPrecent,
-                      decoration: BoxDecoration(
-                        color: (batteryPrecent <= 10)
-                            ? roverGraphRed
-                            : (batteryPrecent <= 50)
-                                ? roverGraphYellow
-                                : roverGraphGreen,
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(roverRadiusM)),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  height: 28,
+                  margin: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: Color(roverLightGrey),
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(roverRadiusM)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LayoutBuilder(
+                        builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          return Container(
+                            height: 28,
+                            width:
+                                constraints.maxWidth * (batteryPrecent / 100),
+                            decoration: BoxDecoration(
+                              color: (batteryPrecent <= 10)
+                                  ? roverGraphRed
+                                  : (batteryPrecent <= 50)
+                                      ? roverGraphYellow
+                                      : roverGraphGreen,
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(roverRadiusM)),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -154,31 +188,27 @@ class TopNavBarButton extends StatelessWidget {
     } else {
       isCurrentRoute = false;
     }
-    return Container(
-      margin: const EdgeInsets.all(5),
-      child: InkWell(
-        onTap: () {
-          if (!isCurrentRoute) {
-            Navigator.pushReplacementNamed(context, nextRoute);
-          }
-        },
-        child: Container(
-          alignment: Alignment.center,
-          height: 40,
-          width: MediaQuery.of(context).size.width / 8,
-          decoration: BoxDecoration(
-            color: isCurrentRoute ? Color(roverDarkCoral) : Color(roverCoral),
-            borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
-          ),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: roverFontM,
-            ),
+    return InkWell(
+      onTap: () {
+        if (!isCurrentRoute) {
+          Navigator.pushReplacementNamed(context, nextRoute);
+        }
+      },
+      child: Container(
+        alignment: Alignment.center,
+        height: 40,
+        decoration: BoxDecoration(
+          color: isCurrentRoute ? Color(roverDarkCoral) : Color(roverCoral),
+          borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
+        ),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: roverFontM,
           ),
         ),
       ),

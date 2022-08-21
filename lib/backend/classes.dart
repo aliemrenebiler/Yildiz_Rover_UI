@@ -112,14 +112,3 @@ class Soil {
         "k": k,
       };
 }
-
-class SoilSample {
-  int id;
-  Soil soil;
-  List<Spectro> spectro;
-  SoilSample({
-    required this.id,
-    required this.soil,
-    required this.spectro,
-  });
-}
