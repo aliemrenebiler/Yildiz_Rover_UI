@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Container(
                     padding: const EdgeInsets.all(5),
-                    child: const IPInputBox(),
+                    child: const InputBox(),
                   ),
                   Container(
                     padding: const EdgeInsets.all(5),
@@ -116,8 +116,8 @@ class StartButton extends StatelessWidget {
   }
 }
 
-class IPInputBox extends StatelessWidget {
-  const IPInputBox({Key? key}) : super(key: key);
+class InputBox extends StatelessWidget {
+  const InputBox({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

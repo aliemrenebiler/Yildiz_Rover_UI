@@ -247,90 +247,149 @@ class DataBox extends StatelessWidget {
   }
 }
 
-// DATA BOX INNER WIDGET
-class TiltBox extends StatelessWidget {
+class PitchRollBox extends StatelessWidget {
   final String? name;
   final Stream<Object> stream;
   final String value;
-  const TiltBox({
+  final String image;
+  final double maxValue;
+  final double minValue;
+  const PitchRollBox({
     Key? key,
     this.name,
     required this.stream,
     required this.value,
+    required this.image,
+    required this.maxValue,
+    required this.minValue,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
       padding: const EdgeInsets.all(3),
-      height: 40,
       decoration: BoxDecoration(
         color: Color(roverDarkRed),
         borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          (name != null)
-              ? Expanded(
-                  flex: 1,
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                    margin: const EdgeInsets.all(3),
-                    child: Text(
-                      name!,
-                      textAlign: TextAlign.right,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: roverFontM,
+          Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(3),
+            height: 28,
+            child: Text(
+              name!,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: roverFontM,
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(roverRadiusM)),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(5),
+                  child: AspectRatio(
+                    aspectRatio: 2.3,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(image),
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),
-                )
-              : Container(),
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.all(3),
-              height: 28,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(roverRadiusM)),
-              ),
-              child: StreamBuilder<Object>(
-                stream: stream,
-                builder: (context, snapshot) {
-                  String dataBoxText;
-                  if (snapshot.hasData) {
-                    Map<String, dynamic> newData =
-                        snapshot.data as Map<String, dynamic>;
-                    if (double.tryParse(newData[value]) != null) {
-                      dataBoxText = newData[value].toStringAsFixed(3);
+                ),
+                StreamBuilder(
+                  stream: stream,
+                  builder: (context, snapshot) {
+                    String dataBoxText;
+                    double dataDoubleValue;
+                    if (snapshot.hasData) {
+                      Map<String, dynamic> newData =
+                          snapshot.data! as Map<String, dynamic>;
+                      dataDoubleValue = double.parse(newData[value]);
+                      dataBoxText = ((2 *
+                                  (dataDoubleValue - minValue) /
+                                  (maxValue - minValue)) -
+                              1)
+                          .toString();
                     } else {
-                      dataBoxText = newData[value].toString();
+                      dataDoubleValue = 50;
+                      dataBoxText = '--';
                     }
-                  } else if (snapshot.hasError) {
-                    dataBoxText = 'ERROR';
-                  } else {
-                    dataBoxText = '--';
-                  }
-                  return Text(
-                    dataBoxText,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: roverFontM,
-                    ),
-                  );
-                },
-              ),
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: Container(
+                            height: 30,
+                            margin: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Color(roverLightGrey),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(roverRadiusM)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                LayoutBuilder(
+                                  builder: (BuildContext context,
+                                      BoxConstraints constraints) {
+                                    return Container(
+                                      height: 28,
+                                      width: constraints.maxWidth *
+                                          ((dataDoubleValue - minValue) /
+                                              (maxValue - minValue)),
+                                      decoration: BoxDecoration(
+                                        color: roverGraphRed,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(roverRadiusM)),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.all(3),
+                            child: Text(
+                              dataBoxText,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ],
@@ -413,6 +472,38 @@ class StatusBox extends StatelessWidget {
                 fontSize: roverFontL,
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: PitchRollBox(
+                    name: 'Pitch',
+                    stream: statusStream,
+                    value: 'pitch',
+                    image: 'assets/sparkle_left.png',
+                    maxValue: 100,
+                    minValue: 0,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: PitchRollBox(
+                    name: 'Roll',
+                    stream: statusStream,
+                    value: 'roll',
+                    image: 'assets/sparkle_back.png',
+                    maxValue: 100,
+                    minValue: 0,
+                  ),
+                ),
+              ),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
