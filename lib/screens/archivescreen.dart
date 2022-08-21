@@ -59,7 +59,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                       ),
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 4,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,7 +275,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'C3H8 Amount (ppm)',
+              name: 'C3H8 (ppm)',
               stream: gasStream,
               value: avrgGas.c3h8.toString(),
             ),
@@ -283,7 +283,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'C4H10 Amount (ppm)',
+              name: 'C4H10 (ppm)',
               stream: gasStream,
               value: avrgGas.c4h10.toString(),
             ),
@@ -291,7 +291,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'CH4 Amount (ppm)',
+              name: 'CH4 (ppm)',
               stream: gasStream,
               value: avrgGas.ch4.toString(),
             ),
@@ -299,7 +299,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'CO Amount (ppm)',
+              name: 'CO (ppm)',
               stream: gasStream,
               value: avrgGas.co.toString(),
             ),
@@ -307,7 +307,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'CO2 Amount (ppm)',
+              name: 'CO2 (ppm)',
               stream: gasStream,
               value: avrgGas.co2.toString(),
             ),
@@ -315,7 +315,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'Ethanol Amount (ppm)',
+              name: 'Ethanol (ppm)',
               stream: gasStream,
               value: avrgGas.ethanol.toString(),
             ),
@@ -323,7 +323,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'H2 Amount (ppm)',
+              name: 'H2 (ppm)',
               stream: gasStream,
               value: avrgGas.h2.toString(),
             ),
@@ -331,7 +331,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'H2S Amount (ppm)',
+              name: 'H2S (ppm)',
               stream: gasStream,
               value: avrgGas.h2s.toString(),
             ),
@@ -339,7 +339,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'NH3 Amount (ppm)',
+              name: 'NH3 (ppm)',
               stream: gasStream,
               value: avrgGas.nh3.toString(),
             ),
@@ -347,7 +347,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'NO Amount (ppm)',
+              name: 'NO (ppm)',
               stream: gasStream,
               value: avrgGas.no.toString(),
             ),
@@ -355,7 +355,7 @@ class MultiGasBox extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(5),
             child: DynamicDataBox(
-              name: 'NO2 Amount (ppm)',
+              name: 'NO2 (ppm)',
               stream: gasStream,
               value: avrgGas.no2.toString(),
             ),
@@ -381,65 +381,66 @@ class SampleBox extends StatelessWidget {
         color: Color(roverDarkCoral),
         borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
       ),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            flex: 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.all(5),
-                  height: 40,
-                  child: Text(
-                    "SAMPLE #${soilSamples[sample].id}",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: roverFontL,
-                    ),
-                  ),
-                ),
-                Container(
+          Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(5),
+            height: 40,
+            child: Text(
+              "SAMPLE #${soilSamples[sample].id}",
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: roverFontL,
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
                   margin: const EdgeInsets.all(5),
                   child: StaticDataBox(
                     name: 'Temperature (°C)',
                     value: soilSamples[sample].soil.temperature.toString(),
                   ),
                 ),
-                Container(
+              ),
+              Expanded(
+                child: Container(
                   margin: const EdgeInsets.all(5),
                   child: StaticDataBox(
                     name: 'N Amount (mg/L)',
                     value: soilSamples[sample].soil.n.toString(),
                   ),
                 ),
-                Container(
+              ),
+              Expanded(
+                child: Container(
                   margin: const EdgeInsets.all(5),
                   child: StaticDataBox(
                     name: 'P Amount (mg/L)',
                     value: soilSamples[sample].soil.p.toString(),
                   ),
                 ),
-                Container(
+              ),
+              Expanded(
+                child: Container(
                   margin: const EdgeInsets.all(5),
                   child: StaticDataBox(
                     name: 'K Amount (mg/L)',
                     value: soilSamples[sample].soil.k.toString(),
                   ),
                 ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(),
+              ),
+            ],
           ),
         ],
       ),

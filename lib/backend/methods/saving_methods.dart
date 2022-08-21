@@ -8,21 +8,21 @@ List<Spectro> spectroChartData = [];
 int sampleAmount = 0;
 List<SoilSample> soilSamples = [
   SoilSample(
-    id: -5,
+    id: 1,
     soil: Soil(id: 0, temperature: 1, n: 2, p: 3, k: 4),
     spectro: spectroChartData,
   ),
 ];
 Gas avrgGas = Gas(
   id: 0,
-  c3h8: 6,
+  c3h8: 0,
   c4h10: 0,
   ch4: 0,
   co: 0,
   co2: 0,
   ethanol: 0,
   h2: 0,
-  h2s: 6,
+  h2s: 0,
   nh3: 0,
   no: 0,
   no2: 0,

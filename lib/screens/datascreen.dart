@@ -21,38 +21,6 @@ class _DataScreenState extends State<DataScreen> {
     setState(() {});
   }
 
-  Widget selectedDataGraph() {
-    switch (graphLayoutIndex) {
-      case 0:
-        return AspectRatio(
-          aspectRatio: 1.5,
-          child: GasChart(
-            title: 'Multiple Gas',
-            stream: gasStream,
-            graphData: gasChartData,
-          ),
-        );
-      case 1:
-        return AspectRatio(
-          aspectRatio: 1.5,
-          child: SpectroChart(
-            title: 'VIS/NIR Reflectance Spectrometer',
-            stream: spectro1Stream,
-            graphData: spectroChartData,
-          ),
-        );
-      default:
-        return AspectRatio(
-          aspectRatio: 1.5,
-          child: GasChart(
-            title: 'Multiple Gas',
-            stream: gasStream,
-            graphData: gasChartData,
-          ),
-        );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -88,38 +56,21 @@ class _DataScreenState extends State<DataScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: GraphLayoutButton(
-                                    title: 'Multiple Gas',
-                                    layout: 0,
-                                    notifyParent: refresh,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: GraphLayoutButton(
-                                    title: 'VIS/NIR Ref. Spec.',
-                                    layout: 1,
-                                    notifyParent: refresh,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            child: const SoilBox(),
                           ),
                           Container(
                             alignment: Alignment.topCenter,
                             padding: const EdgeInsets.all(5),
-                            child: selectedDataGraph(),
+                            child: AspectRatio(
+                              aspectRatio: 1.5,
+                              child: GasChart(
+                                title: 'Multiple Gas',
+                                stream: gasStream,
+                                graphData: gasChartData,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -131,15 +82,11 @@ class _DataScreenState extends State<DataScreen> {
                         children: [
                           Container(
                             padding: const EdgeInsets.all(5),
-                            child: const StatusBox(),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5),
                             child: const AtmospBox(),
                           ),
                           Container(
                             padding: const EdgeInsets.all(5),
-                            child: const SoilBox(),
+                            child: const StatusBox(),
                           ),
                         ],
                       ),
@@ -393,51 +340,6 @@ class PitchRollBox extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// GRAPH SELECTION BUTTON
-class GraphLayoutButton extends StatelessWidget {
-  final String title;
-  final int layout;
-  final Function() notifyParent;
-  const GraphLayoutButton({
-    Key? key,
-    required this.title,
-    required this.layout,
-    required this.notifyParent,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        if (graphLayoutIndex != layout) {
-          graphLayoutIndex = layout;
-          notifyParent();
-        }
-      },
-      child: Container(
-        alignment: Alignment.center,
-        height: 40,
-        decoration: BoxDecoration(
-          color: graphLayoutIndex != layout
-              ? Color(roverCoral)
-              : Color(roverDarkCoral),
-          borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: roverFontM,
-          ),
-        ),
       ),
     );
   }
@@ -781,7 +683,7 @@ class SoilBox extends StatelessWidget {
   }
 }
 
-// GRAPHIC BOXES
+// CHART BOX
 class GasChart extends StatelessWidget {
   final String title;
   final Stream stream;
@@ -991,6 +893,10 @@ class GasChart extends StatelessWidget {
   }
 }
 
+/*
+// UNUSED!!!
+
+// GRAPHIC BOX
 class SpectroChart extends StatelessWidget {
   final String title;
   final Stream stream;
@@ -1089,3 +995,49 @@ class SpectroChart extends StatelessWidget {
     );
   }
 }
+
+// GRAPH SELECTION BUTTON
+class GraphLayoutButton extends StatelessWidget {
+  final String title;
+  final int layout;
+  final Function() notifyParent;
+  const GraphLayoutButton({
+    Key? key,
+    required this.title,
+    required this.layout,
+    required this.notifyParent,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        if (graphLayoutIndex != layout) {
+          graphLayoutIndex = layout;
+          notifyParent();
+        }
+      },
+      child: Container(
+        alignment: Alignment.center,
+        height: 40,
+        decoration: BoxDecoration(
+          color: graphLayoutIndex != layout
+              ? Color(roverCoral)
+              : Color(roverDarkCoral),
+          borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
+        ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: roverFontM,
+          ),
+        ),
+      ),
+    );
+  }
+}
+*/
