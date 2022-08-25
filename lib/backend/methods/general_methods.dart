@@ -33,9 +33,9 @@ StreamController<Map<String, dynamic>> gasController =
     StreamController<Map<String, dynamic>>.broadcast();
 Stream<Map<String, dynamic>> gasStream = gasController.stream;
 
-StreamController<Map<String, dynamic>> spectroController =
+StreamController<Map<String, dynamic>> voltageController =
     StreamController<Map<String, dynamic>>.broadcast();
-Stream<Map<String, dynamic>> spectro1Stream = spectroController.stream;
+Stream<Map<String, dynamic>> voltageStream = voltageController.stream;
 
 // JSON DATA
 Map<String, dynamic> jsonData = {};
@@ -70,6 +70,7 @@ getData(String url) async {
         saveGasData(jsonData['gas']);
         gasController.add(jsonData['gas']);
       }
+      voltageController.add(jsonData['others']);
     } else {
       // WILL BE CHANGED! <==========================================================================================
     }

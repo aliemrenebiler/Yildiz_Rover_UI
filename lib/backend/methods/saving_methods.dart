@@ -8,6 +8,9 @@ int sampleAmount = 0;
 List<Soil> soilSamples = [
   Soil(id: 1, temperature: 1, n: 2, p: 3, k: 4),
 ];
+List<SoilWeight> weightSamples = [
+  SoilWeight(date: DateTime.now(), id: 1, weight: 23.7),
+];
 Gas avrgGas = Gas(
   id: 0,
   c3h8: 0,

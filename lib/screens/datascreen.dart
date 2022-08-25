@@ -31,72 +31,74 @@ class _DataScreenState extends State<DataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const TopNavBar(),
-          Expanded(
-            child: SingleChildScrollView(
-              primary: false,
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                alignment: Alignment.topCenter,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const SoilBox(),
-                          ),
-                          Container(
-                            alignment: Alignment.topCenter,
-                            padding: const EdgeInsets.all(5),
-                            child: AspectRatio(
-                              aspectRatio: 1.5,
-                              child: GasChart(
-                                title: 'Multiple Gas',
-                                stream: gasStream,
-                                graphData: gasChartData,
+      body: Container(
+        alignment: Alignment.topCenter,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const TopNavBar(),
+            Expanded(
+              child: SingleChildScrollView(
+                primary: false,
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              child: const SoilBox(),
+                            ),
+                            Container(
+                              alignment: Alignment.topCenter,
+                              padding: const EdgeInsets.all(5),
+                              child: AspectRatio(
+                                aspectRatio: 1.5,
+                                child: GasChart(
+                                  title: 'Multiple Gas',
+                                  stream: gasStream,
+                                  graphData: gasChartData,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const AtmospBox(),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const StatusBox(),
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              child: const AtmospBox(),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              child: const StatusBox(),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

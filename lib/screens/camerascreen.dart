@@ -13,74 +13,81 @@ class CameraScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const TopNavBar(),
-          Expanded(
-            child: SingleChildScrollView(
-              primary: false,
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                child: StreamBuilder<Object>(
-                  stream: webCameraStream,
-                  builder: (context, snapshot) {
-                    int cameraCount;
-                    List<int> allCameras = [];
-                    if (snapshot.hasData) {
-                      Map<String, dynamic> newData =
-                          snapshot.data as Map<String, dynamic>;
-                      cameraCount = newData['id'];
-                      allCameras = getCameraIDs(newData['cameras'].toString());
-                    } else {
-                      cameraCount = 0;
-                    }
+      body: Container(
+        alignment: Alignment.topCenter,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const TopNavBar(),
+            Expanded(
+              child: SingleChildScrollView(
+                primary: false,
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: StreamBuilder<Object>(
+                    stream: webCameraStream,
+                    builder: (context, snapshot) {
+                      int cameraCount;
+                      List<int> allCameras = [];
+                      if (snapshot.hasData) {
+                        Map<String, dynamic> newData =
+                            snapshot.data as Map<String, dynamic>;
+                        cameraCount = newData['id'];
+                        allCameras =
+                            getCameraIDs(newData['cameras'].toString());
+                      } else {
+                        cameraCount = 0;
+                      }
 
-                    if (cameraCount == 0) {
-                      return Container(
-                        padding: const EdgeInsets.all(5),
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height - 115,
-                        child: Text(
-                          "No Avaliabe Camera",
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Color(roverGrey),
-                            fontWeight: FontWeight.bold,
-                            fontSize: roverFontM,
+                      if (cameraCount == 0) {
+                        return Container(
+                          padding: const EdgeInsets.all(5),
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height - 115,
+                          child: Text(
+                            "No Avaliabe Camera",
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Color(roverGrey),
+                              fontWeight: FontWeight.bold,
+                              fontSize: roverFontM,
+                            ),
                           ),
-                        ),
-                      );
-                    } else {
-                      return GridView.count(
-                        shrinkWrap: true,
-                        crossAxisCount: 2,
-                        childAspectRatio: 16 / 9,
-                        children: List.generate(
-                          cameraCount,
-                          (index) {
-                            return Container(
-                              padding: const EdgeInsets.all(5),
-                              child: CameraBox(
-                                name: 'Camera #$index',
-                                camID: allCameras[index],
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    }
-                  },
+                        );
+                      } else {
+                        return GridView.count(
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          childAspectRatio: 16 / 9,
+                          children: List.generate(
+                            cameraCount,
+                            (index) {
+                              return Container(
+                                padding: const EdgeInsets.all(5),
+                                child: CameraBox(
+                                  name: 'Camera #$index',
+                                  camID: allCameras[index],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

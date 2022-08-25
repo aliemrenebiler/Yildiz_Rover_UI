@@ -112,3 +112,14 @@ class Soil {
         "k": k,
       };
 }
+
+class SoilWeight {
+  DateTime? date;
+  int id;
+  double weight;
+  SoilWeight({
+    this.date,
+    required this.id,
+    required this.weight,
+  });
+}
