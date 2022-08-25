@@ -91,10 +91,14 @@ class BatteryBox extends StatelessWidget {
         builder: (context, snapshot) {
           String batteryText;
           int batteryPrecent;
+          String batteryCurrent;
+          String batteryVoltage;
           if (snapshot.hasData) {
             Map<String, dynamic> newData =
                 snapshot.data! as Map<String, dynamic>;
-            batteryPrecent = newData['precent'];
+            batteryPrecent = int.parse(newData['precent']);
+            batteryCurrent = newData['current'].toStringAsFixed(1);
+            batteryVoltage = newData['voltage'].toStringAsFixed(1);
             if (batteryPrecent > 100) {
               batteryPrecent = 100;
             } else if (batteryPrecent < 0) {
@@ -103,7 +107,9 @@ class BatteryBox extends StatelessWidget {
             batteryText = '%$batteryPrecent';
           } else {
             batteryPrecent = 50;
-            batteryText = '---';
+            batteryText = '--';
+            batteryCurrent = '--';
+            batteryVoltage = '--';
           }
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -160,6 +166,40 @@ class BatteryBox extends StatelessWidget {
                         },
                       ),
                     ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(3),
+                  child: Text(
+                    "C: $batteryCurrent",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(3),
+                  child: Text(
+                    "V: $batteryVoltage",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
               ),
