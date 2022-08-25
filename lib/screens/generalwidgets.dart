@@ -124,16 +124,16 @@ class BatteryBox extends StatelessWidget {
                     batteryText,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: roverFontM,
                     ),
                   ),
                 ),
               ),
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Container(
                   height: 28,
                   margin: const EdgeInsets.all(3),
@@ -166,40 +166,6 @@ class BatteryBox extends StatelessWidget {
                         },
                       ),
                     ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.all(3),
-                  child: Text(
-                    "C: $batteryCurrent",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.all(3),
-                  child: Text(
-                    "V: $batteryVoltage",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
                   ),
                 ),
               ),

@@ -384,6 +384,32 @@ class StatusBox extends StatelessWidget {
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.all(5),
+                  child: DataBox(
+                    name: 'Battery Current (mA)',
+                    stream: batteryStream,
+                    value: 'current',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: DataBox(
+                    name: 'Battery Voltage (mV)',
+                    stream: batteryStream,
+                    value: 'voltage',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
                   child: PitchRollBox(
                     name: 'Pitch',
                     stream: statusStream,
