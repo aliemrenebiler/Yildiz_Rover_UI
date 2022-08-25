@@ -50,31 +50,29 @@ getData(String url) async {
       jsonData = jsonDecode(response.body);
       int nullData = 0;
 
-      if (int.parse(jsonData['battery']['id']) != nullData) {
+      if (jsonData['battery']['id'] != nullData) {
         batteryController.add(jsonData['battery']);
       }
-      if (int.parse(jsonData['camera']['id']) != nullData) {
+      if (jsonData['camera']['id'] != nullData) {
         webCameraController.add(jsonData['camera']);
       }
-      if (int.parse(jsonData['status']['id']) != nullData) {
+      if (jsonData['status']['id'] != nullData) {
         statusController.add(jsonData['status']);
       }
-      if (int.parse(jsonData['atmosphere']['id']) != nullData) {
+      if (jsonData['atmosphere']['id'] != nullData) {
         atmosphereController.add(jsonData['atmosphere']);
       }
-      if (int.parse(jsonData['soil']['id']) != nullData) {
+      if (jsonData['soil']['id'] != nullData) {
         saveSoilData(jsonData['soil']);
         soilController.add(jsonData['soil']);
       }
-      if (int.parse(jsonData['gas']['id']) != nullData) {
+      if (jsonData['gas']['id'] != nullData) {
         saveGasData(jsonData['gas']);
         gasController.add(jsonData['gas']);
       }
       voltageController.add(jsonData['others']);
-    } else {
-      // WILL BE CHANGED! <==========================================================================================
     }
   } catch (err) {
-    // WILL BE CHANGED! <==========================================================================================
+    return;
   }
 }
