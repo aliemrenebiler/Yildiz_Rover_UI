@@ -91,14 +91,10 @@ class BatteryBox extends StatelessWidget {
         builder: (context, snapshot) {
           String batteryText;
           int batteryPrecent;
-          String batteryCurrent;
-          String batteryVoltage;
           if (snapshot.hasData) {
             Map<String, dynamic> newData =
                 snapshot.data! as Map<String, dynamic>;
             batteryPrecent = int.parse(newData['precent']);
-            batteryCurrent = newData['current'].toStringAsFixed(1);
-            batteryVoltage = newData['voltage'].toStringAsFixed(1);
             if (batteryPrecent > 100) {
               batteryPrecent = 100;
             } else if (batteryPrecent < 0) {
@@ -108,8 +104,6 @@ class BatteryBox extends StatelessWidget {
           } else {
             batteryPrecent = 50;
             batteryText = '--';
-            batteryCurrent = '--';
-            batteryVoltage = '--';
           }
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
