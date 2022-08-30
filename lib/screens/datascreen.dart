@@ -73,6 +73,10 @@ class _DataScreenState extends State<DataScreen> {
                                 ),
                               ),
                             ),
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              child: const SoilWeightBox(),
+                            ),
                           ],
                         ),
                       ),
@@ -109,11 +113,13 @@ class DataBox extends StatelessWidget {
   final String? name;
   final Stream<Object> stream;
   final String value;
+  final int? index;
   const DataBox({
     Key? key,
     this.name,
     required this.stream,
     required this.value,
+    this.index,
   }) : super(key: key);
 
   @override
@@ -166,13 +172,19 @@ class DataBox extends StatelessWidget {
                   if (snapshot.hasData) {
                     Map<String, dynamic> newData =
                         snapshot.data as Map<String, dynamic>;
-                    if (double.tryParse(newData[value]) != null) {
-                      dataBoxText = newData[value].toStringAsFixed(3);
+                    if (index != null) {
+                      if (double.tryParse(newData[value][index]) != null) {
+                        dataBoxText = newData[value][index].toStringAsFixed(3);
+                      } else {
+                        dataBoxText = newData[value][index].toString();
+                      }
                     } else {
-                      dataBoxText = newData[value].toString();
+                      if (double.tryParse(newData[value]) != null) {
+                        dataBoxText = newData[value].toStringAsFixed(3);
+                      } else {
+                        dataBoxText = newData[value].toString();
+                      }
                     }
-                  } else if (snapshot.hasError) {
-                    dataBoxText = 'ERROR';
                   } else {
                     dataBoxText = '--';
                   }
@@ -191,6 +203,61 @@ class DataBox extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SaveSoilButton extends StatelessWidget {
+  final String name;
+  final Stream<Object> stream;
+  const SaveSoilButton({
+    Key? key,
+    required this.name,
+    required this.stream,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: StreamBuilder<Object>(
+        stream: stream,
+        builder: (context, snapshot) {
+          int buttonColor;
+          if (snapshot.hasData) {
+            buttonColor = roverCoral;
+          } else {
+            buttonColor = roverDarkRed;
+          }
+          return InkWell(
+            onTap: () {
+              if (snapshot.hasData) {
+                Soil newSoil =
+                    Soil.fromJson(snapshot.data as Map<String, dynamic>);
+                soilSamples.add(newSoil);
+              }
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Color(buttonColor),
+                borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
+              ),
+              child: Text(
+                name,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: roverFontM,
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -377,31 +444,12 @@ class StatusBox extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  child: DataBox(
-                    name: 'Battery Current (mA)',
-                    stream: batteryStream,
-                    value: 'current',
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  child: DataBox(
-                    name: 'Battery Voltage (mV)',
-                    stream: batteryStream,
-                    value: 'voltage',
-                  ),
-                ),
-              ),
-            ],
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: DataBox(
+              stream: statusStream,
+              value: 'status_number',
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -443,8 +491,9 @@ class StatusBox extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
+                    name: 'X Coord.',
                     stream: statusStream,
-                    value: 'z',
+                    value: 'x',
                   ),
                 ),
               ),
@@ -452,9 +501,9 @@ class StatusBox extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
-                    name: 'X Coord.',
+                    name: 'Y Coord.',
                     stream: statusStream,
-                    value: 'x',
+                    value: 'y',
                   ),
                 ),
               ),
@@ -468,9 +517,9 @@ class StatusBox extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
-                    name: 'Y Coord.',
-                    stream: statusStream,
-                    value: 'y',
+                    name: 'Battery Current (mA)',
+                    stream: batteryStream,
+                    value: 'current',
                   ),
                 ),
               ),
@@ -478,9 +527,9 @@ class StatusBox extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
-                    name: 'Z Coord.',
-                    stream: statusStream,
-                    value: 'z',
+                    name: 'Battery Voltage (mV)',
+                    stream: batteryStream,
+                    value: 'voltage',
                   ),
                 ),
               ),
@@ -700,6 +749,99 @@ class SoilBox extends StatelessWidget {
                     name: 'K Amount (mg/L)',
                     stream: soilStream,
                     value: 'k',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: SaveSoilButton(name: "SAVE", stream: soilStream),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SoilWeightBox extends StatelessWidget {
+  const SoilWeightBox({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Color(roverDarkCoral),
+        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(5),
+            height: 40,
+            child: Text(
+              'SOIL WEIGHTS',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: roverFontL,
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: DataBox(
+                    name: 'Weight #1',
+                    stream: weightStream,
+                    value: 'soil_weights',
+                    index: 0,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: DataBox(
+                    name: 'Weight #2',
+                    stream: weightStream,
+                    value: 'soil_weights',
+                    index: 1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: DataBox(
+                    name: 'Weight #3',
+                    stream: weightStream,
+                    value: 'soil_weights',
+                    index: 2,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: SaveSoilButton(
+                    name: "SAVE",
+                    stream: soilStream,
                   ),
                 ),
               ),

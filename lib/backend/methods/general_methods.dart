@@ -33,6 +33,10 @@ StreamController<Map<String, dynamic>> gasController =
     StreamController<Map<String, dynamic>>.broadcast();
 Stream<Map<String, dynamic>> gasStream = gasController.stream;
 
+StreamController<Map<String, dynamic>> weightController =
+    StreamController<Map<String, dynamic>>.broadcast();
+Stream<Map<String, dynamic>> weightStream = weightController.stream;
+
 StreamController<Map<String, dynamic>> voltageController =
     StreamController<Map<String, dynamic>>.broadcast();
 Stream<Map<String, dynamic>> voltageStream = voltageController.stream;

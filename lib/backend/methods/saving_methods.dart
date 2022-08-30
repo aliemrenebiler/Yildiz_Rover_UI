@@ -9,7 +9,7 @@ List<Soil> soilSamples = [
   Soil(id: 1, temperature: 1, n: 2, p: 3, k: 4),
 ];
 List<SoilWeight> weightSamples = [
-  SoilWeight(date: DateTime.now(), id: 1, weight: 23.7),
+  SoilWeight(date: DateTime.now(), id: 1, weights: [23.7, 96.4]),
 ];
 Gas avrgGas = Gas(
   id: 0,

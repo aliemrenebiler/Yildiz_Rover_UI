@@ -4,7 +4,6 @@ import 'package:webviewx/webviewx.dart';
 import '../backend/methods/general_methods.dart';
 import 'generalwidgets.dart';
 import '../backend/theme.dart';
-import '../backend/methods/camera_methods.dart';
 
 class CameraScreen extends StatelessWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -34,13 +33,12 @@ class CameraScreen extends StatelessWidget {
                     stream: webCameraStream,
                     builder: (context, snapshot) {
                       int cameraCount;
-                      List<int> allCameras = [];
+                      List<dynamic> allCameras = [];
                       if (snapshot.hasData) {
                         Map<String, dynamic> newData =
                             snapshot.data as Map<String, dynamic>;
                         cameraCount = newData['id'];
-                        allCameras =
-                            getCameraIDs(newData['cameras'].toString());
+                        allCameras = newData['cameras'];
                       } else {
                         cameraCount = 0;
                       }

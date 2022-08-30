@@ -116,10 +116,20 @@ class Soil {
 class SoilWeight {
   DateTime? date;
   int id;
-  double weight;
+  List<double> weights;
   SoilWeight({
     this.date,
     required this.id,
-    required this.weight,
+    required this.weights,
   });
+
+  factory SoilWeight.fromJson(Map<String, dynamic> json) => SoilWeight(
+        id: json["id"],
+        weights: json["weights"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "weights": weights,
+      };
 }

@@ -569,13 +569,14 @@ class WeightBox extends StatelessWidget {
                   "${weightSamples[sample].date!.hour}:${weightSamples[sample].date!.minute}:${weightSamples[sample].date!.second}",
             ),
           ),
-          Container(
-            margin: const EdgeInsets.all(5),
-            child: StaticDataBox(
-              name: 'Weight (g)',
-              value: weightSamples[sample].weight.toString(),
+          for (int i = 0; i < weightSamples[sample].weights.length; i++)
+            Container(
+              margin: const EdgeInsets.all(5),
+              child: StaticDataBox(
+                name: 'Weight #${i + 1} (g)',
+                value: weightSamples[sample].weights[i].toString(),
+              ),
             ),
-          ),
         ],
       ),
     );
