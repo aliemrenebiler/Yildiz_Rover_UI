@@ -89,6 +89,9 @@ class _MyAppState extends State<MyApp> {
 }
 
 /*
+The app should be built with HTML:
+- flutter build web --web-renderer html
+
 To enable/disable Mac/Windows/Linux app
 - Use: flutter config --enable-linux-desktop
 - Use: flutter config --no-enable-linux-desktop
