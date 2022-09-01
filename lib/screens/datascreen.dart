@@ -62,6 +62,10 @@ class _DataScreenState extends State<DataScreen> {
                               child: const SoilBox(),
                             ),
                             Container(
+                              padding: const EdgeInsets.all(5),
+                              child: const AtmospBox(),
+                            ),
+                            Container(
                               alignment: Alignment.topCenter,
                               padding: const EdgeInsets.all(5),
                               child: AspectRatio(
@@ -73,10 +77,6 @@ class _DataScreenState extends State<DataScreen> {
                                 ),
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              child: const SoilWeightBox(),
-                            ),
                           ],
                         ),
                       ),
@@ -87,11 +87,15 @@ class _DataScreenState extends State<DataScreen> {
                           children: [
                             Container(
                               padding: const EdgeInsets.all(5),
-                              child: const AtmospBox(),
+                              child: const StatusBox(),
                             ),
                             Container(
                               padding: const EdgeInsets.all(5),
-                              child: const StatusBox(),
+                              child: const SoilWeightBox(),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              child: const VoltageBox(),
                             ),
                           ],
                         ),
@@ -208,13 +212,15 @@ class DataBox extends StatelessWidget {
   }
 }
 
-class SaveSoilButton extends StatelessWidget {
+class SaveDataButton extends StatelessWidget {
   final String name;
   final Stream<Object> stream;
-  const SaveSoilButton({
+  final String data;
+  const SaveDataButton({
     Key? key,
     required this.name,
     required this.stream,
+    required this.data,
   }) : super(key: key);
 
   @override
@@ -233,9 +239,28 @@ class SaveSoilButton extends StatelessWidget {
           return InkWell(
             onTap: () {
               if (snapshot.hasData) {
-                Soil newSoil =
-                    Soil.fromJson(snapshot.data as Map<String, dynamic>);
-                soilSamples.add(newSoil);
+                if (data == 'soil') {
+                  Soil newSoil = Soil.fromJson(
+                    snapshot.data as Map<String, dynamic>,
+                  );
+                  newSoil.id = soilSamples.length + 1;
+                  newSoil.date = DateTime.now();
+                  soilSamples.add(newSoil);
+                } else if (data == 'weights') {
+                  SoilWeight newWeight = SoilWeight.fromJson(
+                    snapshot.data as Map<String, dynamic>,
+                  );
+                  newWeight.id = weightSamples.length + 1;
+                  newWeight.date = DateTime.now();
+                  weightSamples.add(newWeight);
+                } else if (data == 'voltage') {
+                  Voltage newVoltage = Voltage.fromJson(
+                    snapshot.data as Map<String, dynamic>,
+                  );
+                  newVoltage.id = savedVoltages.length + 1;
+                  newVoltage.date = DateTime.now();
+                  savedVoltages.add(newVoltage);
+                }
               }
             },
             child: Container(
@@ -754,9 +779,24 @@ class SoilBox extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            margin: const EdgeInsets.all(5),
-            child: SaveSoilButton(name: "SAVE", stream: soilStream),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: SaveDataButton(
+                    name: "SAVE",
+                    stream: soilStream,
+                    data: 'soil',
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -802,7 +842,7 @@ class SoilWeightBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'Weight #1',
-                    stream: weightStream,
+                    stream: weightsStream,
                     value: 'soil_weights',
                     index: 0,
                   ),
@@ -813,7 +853,7 @@ class SoilWeightBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'Weight #2',
-                    stream: weightStream,
+                    stream: weightsStream,
                     value: 'soil_weights',
                     index: 1,
                   ),
@@ -830,7 +870,7 @@ class SoilWeightBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
                     name: 'Weight #3',
-                    stream: weightStream,
+                    stream: weightsStream,
                     value: 'soil_weights',
                     index: 2,
                   ),
@@ -839,9 +879,71 @@ class SoilWeightBox extends StatelessWidget {
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.all(5),
-                  child: SaveSoilButton(
+                  child: SaveDataButton(
                     name: "SAVE",
-                    stream: soilStream,
+                    stream: weightsStream,
+                    data: 'weights',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class VoltageBox extends StatelessWidget {
+  const VoltageBox({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Color(roverDarkCoral),
+        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(5),
+            height: 40,
+            child: Text(
+              'VOLTAGE',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: roverFontL,
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: DataBox(
+                    name: 'Voltage (mV)',
+                    stream: voltageStream,
+                    value: 'panel_voltage',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: SaveDataButton(
+                    name: "SAVE",
+                    stream: voltageStream,
+                    data: 'voltage',
                   ),
                 ),
               ),

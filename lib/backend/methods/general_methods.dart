@@ -35,7 +35,7 @@ Stream<Map<String, dynamic>> gasStream = gasController.stream;
 
 StreamController<Map<String, dynamic>> weightController =
     StreamController<Map<String, dynamic>>.broadcast();
-Stream<Map<String, dynamic>> weightStream = weightController.stream;
+Stream<Map<String, dynamic>> weightsStream = weightController.stream;
 
 StreamController<Map<String, dynamic>> voltageController =
     StreamController<Map<String, dynamic>>.broadcast();
@@ -75,6 +75,7 @@ getData(String url) async {
         gasController.add(jsonData['gas']);
       }
       voltageController.add(jsonData['others']);
+      weightController.add(jsonData['others']);
     }
   } catch (err) {
     return;

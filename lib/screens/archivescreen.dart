@@ -54,43 +54,30 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              child: const MultiGasBox(),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              child: const VoltageBox(),
-                            )
-                          ],
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          child: const MultiGasBox(),
                         ),
                       ),
                       Expanded(
                         flex: 1,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              child: const AllWeightsBox(),
-                            )
-                          ],
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          child: const AllSamplesBox(),
                         ),
                       ),
                       Expanded(
-                        flex: 2,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              child: const AllSamplesBox(),
-                            )
-                          ],
+                        flex: 1,
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          child: const AllVoltagesBox(),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          child: const AllWeightsBox(),
                         ),
                       ),
                     ],
@@ -269,97 +256,6 @@ class StaticDataBox extends StatelessWidget {
   }
 }
 
-class DataBox extends StatelessWidget {
-  final String? name;
-  final Stream<Object> stream;
-  final String value;
-  const DataBox({
-    Key? key,
-    this.name,
-    required this.stream,
-    required this.value,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(3),
-      height: 40,
-      decoration: BoxDecoration(
-        color: Color(roverDarkRed),
-        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          (name != null)
-              ? Expanded(
-                  flex: 1,
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                    margin: const EdgeInsets.all(3),
-                    child: Text(
-                      name!,
-                      textAlign: TextAlign.right,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: roverFontM,
-                      ),
-                    ),
-                  ),
-                )
-              : Container(),
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.all(3),
-              height: 28,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(roverRadiusM)),
-              ),
-              child: StreamBuilder<Object>(
-                stream: stream,
-                builder: (context, snapshot) {
-                  String dataBoxText;
-                  if (snapshot.hasData) {
-                    Map<String, dynamic> newData =
-                        snapshot.data as Map<String, dynamic>;
-                    if (double.tryParse(newData[value]) != null) {
-                      dataBoxText = newData[value].toStringAsFixed(3);
-                    } else {
-                      dataBoxText = newData[value].toString();
-                    }
-                  } else if (snapshot.hasError) {
-                    dataBoxText = 'ERROR';
-                  } else {
-                    dataBoxText = '--';
-                  }
-                  return Text(
-                    dataBoxText,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: roverFontM,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 // ARCHIVE BOXES
 class MultiGasBox extends StatelessWidget {
   const MultiGasBox({Key? key}) : super(key: key);
@@ -484,8 +380,12 @@ class MultiGasBox extends StatelessWidget {
   }
 }
 
-class VoltageBox extends StatelessWidget {
-  const VoltageBox({Key? key}) : super(key: key);
+class SampleBox extends StatelessWidget {
+  final int sample;
+  const SampleBox({
+    Key? key,
+    required this.sample,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -496,14 +396,15 @@ class VoltageBox extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             alignment: Alignment.center,
             margin: const EdgeInsets.all(5),
             height: 40,
             child: Text(
-              'PANEL VOLTAGE',
+              "Sample #${soilSamples[sample].id}",
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -515,10 +416,38 @@ class VoltageBox extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.all(5),
-            child: DataBox(
-              name: 'Voltage (mV)',
-              stream: voltageStream,
-              value: 'panel_voltage',
+            child: StaticDataBox(
+              name: 'Time',
+              value:
+                  "${weightSamples[sample].date!.hour}:${weightSamples[sample].date!.minute}:${weightSamples[sample].date!.second}",
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: StaticDataBox(
+              name: 'Temperature (°C)',
+              value: soilSamples[sample].temperature.toString(),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: StaticDataBox(
+              name: 'N Amount (mg/L)',
+              value: soilSamples[sample].n.toString(),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: StaticDataBox(
+              name: 'P Amount (mg/L)',
+              value: soilSamples[sample].p.toString(),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: StaticDataBox(
+              name: 'K Amount (mg/L)',
+              value: soilSamples[sample].k.toString(),
             ),
           ),
         ],
@@ -527,9 +456,188 @@ class VoltageBox extends StatelessWidget {
   }
 }
 
-class WeightBox extends StatelessWidget {
+class AllSamplesBox extends StatelessWidget {
+  const AllSamplesBox({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Color(roverDarkRed),
+        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
+      ),
+      child: StreamBuilder<Object>(
+        stream: soilStream,
+        builder: (context, snapshot) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.all(5),
+                height: 40,
+                child: Text(
+                  "SOIL SAMPLES",
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: roverFontL,
+                  ),
+                ),
+              ),
+              if (soilSamples.isEmpty)
+                Container(
+                  margin: const EdgeInsets.all(5),
+                  child: Text(
+                    "No Avaliabe Sample",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(roverDarkCoral),
+                      fontWeight: FontWeight.bold,
+                      fontSize: roverFontM,
+                    ),
+                  ),
+                )
+              else
+                for (int i = 0; i < soilSamples.length; i++)
+                  Container(
+                    margin: const EdgeInsets.all(5),
+                    child: SampleBox(sample: i),
+                  ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class VoltageBox extends StatelessWidget {
   final int sample;
-  const WeightBox({
+  const VoltageBox({
+    Key? key,
+    required this.sample,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Color(roverDarkCoral),
+        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(5),
+            height: 40,
+            child: Text(
+              "Voltage #${savedVoltages[sample].id}",
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: roverFontL,
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: StaticDataBox(
+              name: 'Time',
+              value:
+                  "${savedVoltages[sample].date!.hour}:${savedVoltages[sample].date!.minute}:${savedVoltages[sample].date!.second}",
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: StaticDataBox(
+              name: 'Voltage (mV)',
+              value: savedVoltages[sample].voltage.toString(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AllVoltagesBox extends StatelessWidget {
+  const AllVoltagesBox({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Color(roverDarkRed),
+        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
+      ),
+      child: StreamBuilder<Object>(
+        stream: soilStream,
+        builder: (context, snapshot) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.all(5),
+                height: 40,
+                child: Text(
+                  "SAVED VOLTAGES",
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: roverFontL,
+                  ),
+                ),
+              ),
+              if (soilSamples.isEmpty)
+                Container(
+                  margin: const EdgeInsets.all(5),
+                  child: Text(
+                    "No Avaliabe Sample",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(roverDarkCoral),
+                      fontWeight: FontWeight.bold,
+                      fontSize: roverFontM,
+                    ),
+                  ),
+                )
+              else
+                for (int i = 0; i < soilSamples.length; i++)
+                  Container(
+                    margin: const EdgeInsets.all(5),
+                    child: VoltageBox(sample: i),
+                  ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class WeightsBox extends StatelessWidget {
+  final int sample;
+  const WeightsBox({
     Key? key,
     required this.sample,
   }) : super(key: key);
@@ -635,157 +743,7 @@ class AllWeightsBox extends StatelessWidget {
                 for (int i = 0; i < weightSamples.length; i++)
                   Container(
                     margin: const EdgeInsets.all(5),
-                    child: WeightBox(sample: i),
-                  ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class SampleBox extends StatelessWidget {
-  final int sample;
-  const SampleBox({
-    Key? key,
-    required this.sample,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: Color(roverDarkCoral),
-        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.all(5),
-            height: 40,
-            child: Text(
-              "Sample #${soilSamples[sample].id}",
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: roverFontL,
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  child: StaticDataBox(
-                    name: 'Temperature (°C)',
-                    value: soilSamples[sample].temperature.toString(),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  child: StaticDataBox(
-                    name: 'N Amount (mg/L)',
-                    value: soilSamples[sample].n.toString(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  child: StaticDataBox(
-                    name: 'P Amount (mg/L)',
-                    value: soilSamples[sample].p.toString(),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  child: StaticDataBox(
-                    name: 'K Amount (mg/L)',
-                    value: soilSamples[sample].k.toString(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class AllSamplesBox extends StatelessWidget {
-  const AllSamplesBox({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: Color(roverDarkRed),
-        borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
-      ),
-      child: StreamBuilder<Object>(
-        stream: soilStream,
-        builder: (context, snapshot) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.all(5),
-                height: 40,
-                child: Text(
-                  "SOIL SAMPLES",
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: roverFontL,
-                  ),
-                ),
-              ),
-              if (soilSamples.isEmpty)
-                Container(
-                  margin: const EdgeInsets.all(5),
-                  child: Text(
-                    "No Avaliabe Sample",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Color(roverDarkCoral),
-                      fontWeight: FontWeight.bold,
-                      fontSize: roverFontM,
-                    ),
-                  ),
-                )
-              else
-                for (int i = 0; i < soilSamples.length; i++)
-                  Container(
-                    margin: const EdgeInsets.all(5),
-                    child: SampleBox(sample: i),
+                    child: WeightsBox(sample: i),
                   ),
             ],
           );

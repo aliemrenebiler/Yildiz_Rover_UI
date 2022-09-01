@@ -88,12 +88,14 @@ class Soil {
   double n;
   double p;
   double k;
+  DateTime? date;
   Soil({
     required this.id,
     required this.temperature,
     required this.n,
     required this.p,
     required this.k,
+    this.date,
   });
 
   factory Soil.fromJson(Map<String, dynamic> json) => Soil(
@@ -114,22 +116,39 @@ class Soil {
 }
 
 class SoilWeight {
+  int? id;
   DateTime? date;
-  int id;
   List<double> weights;
   SoilWeight({
+    this.id,
     this.date,
-    required this.id,
     required this.weights,
   });
 
   factory SoilWeight.fromJson(Map<String, dynamic> json) => SoilWeight(
-        id: json["id"],
-        weights: json["weights"],
+        weights: json["soil_weights"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "weights": weights,
+        "soil_weights": weights,
+      };
+}
+
+class Voltage {
+  int? id;
+  DateTime? date;
+  double voltage;
+  Voltage({
+    this.id,
+    this.date,
+    required this.voltage,
+  });
+
+  factory Voltage.fromJson(Map<String, dynamic> json) => Voltage(
+        voltage: json["panel_voltage"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "panel_voltage": voltage,
       };
 }
