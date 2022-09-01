@@ -1,5 +1,5 @@
+import 'package:easy_web_view/easy_web_view.dart';
 import 'package:flutter/material.dart';
-import 'package:webviewx/webviewx.dart';
 
 import '../backend/methods/general_methods.dart';
 import 'generalwidgets.dart';
@@ -92,7 +92,7 @@ class CameraScreen extends StatelessWidget {
 }
 
 // Get image as Uint8List
-class CameraBox extends StatelessWidget {
+class CameraBox extends StatefulWidget {
   final String name;
   final int camID;
   const CameraBox({
@@ -102,22 +102,26 @@ class CameraBox extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<CameraBox> createState() => _CameraBoxState();
+}
+
+class _CameraBoxState extends State<CameraBox> {
+  @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(roverLightGrey),
-        ),
-        child: WebViewX(
-          ignoreAllGestures: true,
-          key: const ValueKey('webviewx'),
-          initialContent:
-              'http://$connectedIP:8080/stream?topic=/camera$camID/image_raw',
-          initialSourceType: SourceType.url,
-          height: (MediaQuery.of(context).size.width / 2 - 25) / 0.5625,
-          width: MediaQuery.of(context).size.width / 2 - 25,
-        ),
+    String src =
+        'http://$connectedIP:8080/stream?topic=/camera${widget.camID}/image_raw';
+    ValueKey key = ValueKey('camera${widget.camID}_image_raw');
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(roverLightGrey),
+      ),
+      child: EasyWebView(
+        src: src,
+        isMarkdown: false,
+        convertToWidgets: false,
+        key: key,
+        height: 100,
+        width: 200,
       ),
     );
   }

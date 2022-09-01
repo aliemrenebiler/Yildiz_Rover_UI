@@ -57,9 +57,6 @@ getData(String url) async {
       if (jsonData['battery']['id'] != nullData) {
         batteryController.add(jsonData['battery']);
       }
-      if (jsonData['camera']['id'] != nullData) {
-        webCameraController.add(jsonData['camera']);
-      }
       if (jsonData['status']['id'] != nullData) {
         statusController.add(jsonData['status']);
       }
@@ -74,6 +71,7 @@ getData(String url) async {
         saveGasData(jsonData['gas']);
         gasController.add(jsonData['gas']);
       }
+      webCameraController.add(jsonData['camera']);
       voltageController.add(jsonData['others']);
       weightController.add(jsonData['others']);
     }
