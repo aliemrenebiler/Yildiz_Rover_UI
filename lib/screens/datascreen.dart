@@ -177,13 +177,19 @@ class DataBox extends StatelessWidget {
                     Map<String, dynamic> newData =
                         snapshot.data as Map<String, dynamic>;
                     if (index != null) {
-                      if (double.tryParse(newData[value][index]) != null) {
-                        dataBoxText = newData[value][index].toStringAsFixed(3);
+                      List newList = newData[value] as List;
+                      if (newList.isEmpty) {
+                        dataBoxText = '--';
                       } else {
-                        dataBoxText = newData[value][index].toString();
+                        if (double.tryParse(newList[index!].toString()) !=
+                            null) {
+                          dataBoxText = newList[index!].toStringAsFixed(3);
+                        } else {
+                          dataBoxText = newList[index!].toString();
+                        }
                       }
                     } else {
-                      if (double.tryParse(newData[value]) != null) {
+                      if (double.tryParse(newData[value].toString()) != null) {
                         dataBoxText = newData[value].toStringAsFixed(3);
                       } else {
                         dataBoxText = newData[value].toString();
