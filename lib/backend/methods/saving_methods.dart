@@ -5,29 +5,9 @@ List<Gas> gasChartData = [];
 
 // ARCHIVE PAGE DATA
 int sampleAmount = 0;
-List<Soil> soilSamples = [
-  Soil(
-    id: 1,
-    temperature: 1,
-    n: 2,
-    p: 3,
-    k: 4,
-  ),
-];
-List<SoilWeight> weightSamples = [
-  SoilWeight(
-    id: 1,
-    date: DateTime.now(),
-    weights: [23.7, 96.4, 9485948],
-  ),
-];
-List<Voltage> savedVoltages = [
-  Voltage(
-    id: 1,
-    date: DateTime.now(),
-    voltage: 27.034,
-  ),
-];
+List<Soil> soilSamples = [];
+List<SoilWeight> weightSamples = [];
+List<Voltage> savedVoltages = [];
 Gas avrgGas = Gas(
   id: 0,
   c3h8: 0,

@@ -118,7 +118,7 @@ class Soil {
 class SoilWeight {
   int? id;
   DateTime? date;
-  List<double> weights;
+  List<dynamic> weights;
   SoilWeight({
     this.id,
     this.date,

@@ -25,6 +25,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   void initState() {
     super.initState();
     graphLayoutIndex = 0;
+    refresh();
   }
 
   @override
@@ -152,10 +153,10 @@ class DynamicDataBox extends StatelessWidget {
                 builder: (context, snapshot) {
                   String dataBoxText;
                   if (snapshot.hasData) {
-                    if (double.tryParse(value) != null) {
+                    if (double.tryParse(value.toString()) != null) {
                       dataBoxText = double.parse(value).toStringAsFixed(3);
                     } else {
-                      dataBoxText = value;
+                      dataBoxText = value.toString();
                     }
                   } else {
                     dataBoxText = '--';
@@ -192,10 +193,10 @@ class StaticDataBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String dataBoxText;
-    if (double.tryParse(value) != null) {
+    if (double.tryParse(value.toString()) != null) {
       dataBoxText = double.parse(value).toStringAsFixed(3);
     } else {
-      dataBoxText = value;
+      dataBoxText = value.toString();
     }
     return Container(
       alignment: Alignment.center,
@@ -419,7 +420,7 @@ class SampleBox extends StatelessWidget {
             child: StaticDataBox(
               name: 'Time',
               value:
-                  "${weightSamples[sample].date!.hour}:${weightSamples[sample].date!.minute}:${weightSamples[sample].date!.second}",
+                  "${soilSamples[sample].date!.hour}:${soilSamples[sample].date!.minute}:${soilSamples[sample].date!.second}",
             ),
           ),
           Container(
@@ -493,6 +494,8 @@ class AllSamplesBox extends StatelessWidget {
               if (soilSamples.isEmpty)
                 Container(
                   margin: const EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  height: 40,
                   child: Text(
                     "No Avaliabe Sample",
                     textAlign: TextAlign.center,
@@ -587,7 +590,7 @@ class AllVoltagesBox extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(roverRadiusL)),
       ),
       child: StreamBuilder<Object>(
-        stream: soilStream,
+        stream: voltageStream,
         builder: (context, snapshot) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -607,9 +610,11 @@ class AllVoltagesBox extends StatelessWidget {
                   ),
                 ),
               ),
-              if (soilSamples.isEmpty)
+              if (savedVoltages.isEmpty)
                 Container(
                   margin: const EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  height: 40,
                   child: Text(
                     "No Avaliabe Sample",
                     textAlign: TextAlign.center,
@@ -622,7 +627,7 @@ class AllVoltagesBox extends StatelessWidget {
                   ),
                 )
               else
-                for (int i = 0; i < soilSamples.length; i++)
+                for (int i = 0; i < savedVoltages.length; i++)
                   Container(
                     margin: const EdgeInsets.all(5),
                     child: VoltageBox(sample: i),
@@ -725,9 +730,11 @@ class AllWeightsBox extends StatelessWidget {
                   ),
                 ),
               ),
-              if (soilSamples.isEmpty)
+              if (weightSamples.isEmpty)
                 Container(
                   margin: const EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  height: 40,
                   child: Text(
                     "No Avaliabe Sample",
                     textAlign: TextAlign.center,

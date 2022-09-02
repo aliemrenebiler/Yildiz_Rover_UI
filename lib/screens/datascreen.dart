@@ -256,9 +256,11 @@ class SaveDataButton extends StatelessWidget {
                   SoilWeight newWeight = SoilWeight.fromJson(
                     snapshot.data as Map<String, dynamic>,
                   );
-                  newWeight.id = weightSamples.length + 1;
-                  newWeight.date = DateTime.now();
-                  weightSamples.add(newWeight);
+                  if (newWeight.weights.isNotEmpty) {
+                    newWeight.id = weightSamples.length + 1;
+                    newWeight.date = DateTime.now();
+                    weightSamples.add(newWeight);
+                  }
                 } else if (data == 'voltage') {
                   Voltage newVoltage = Voltage.fromJson(
                     snapshot.data as Map<String, dynamic>,
@@ -367,14 +369,10 @@ class PitchRollBox extends StatelessWidget {
                     if (snapshot.hasData) {
                       Map<String, dynamic> newData =
                           snapshot.data! as Map<String, dynamic>;
-                      dataDoubleValue = double.parse(newData[value]);
-                      dataBoxText = ((2 *
-                                  (dataDoubleValue - minValue) /
-                                  (maxValue - minValue)) -
-                              1)
-                          .toString();
+                      dataDoubleValue = double.parse(newData[value].toString());
+                      dataBoxText = dataDoubleValue.toString();
                     } else {
-                      dataDoubleValue = 50;
+                      dataDoubleValue = maxValue / 2 + minValue / 2;
                       dataBoxText = '--';
                     }
                     return Row(
@@ -475,13 +473,13 @@ class StatusBox extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.all(5),
-            child: DataBox(
-              stream: statusStream,
-              value: 'status_number',
-            ),
-          ),
+          // Container(
+          //   margin: const EdgeInsets.all(5),
+          //   child: DataBox(
+          //     stream: statusStream,
+          //     value: 'status_number',
+          //   ),
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -494,8 +492,8 @@ class StatusBox extends StatelessWidget {
                     stream: statusStream,
                     value: 'pitch',
                     image: 'assets/sparkle_left.png',
-                    maxValue: 100,
-                    minValue: 0,
+                    maxValue: 1,
+                    minValue: -1,
                   ),
                 ),
               ),
@@ -507,39 +505,39 @@ class StatusBox extends StatelessWidget {
                     stream: statusStream,
                     value: 'roll',
                     image: 'assets/sparkle_back.png',
-                    maxValue: 100,
-                    minValue: 0,
+                    maxValue: 1,
+                    minValue: -1,
                   ),
                 ),
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  child: DataBox(
-                    name: 'X Coord.',
-                    stream: statusStream,
-                    value: 'x',
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  child: DataBox(
-                    name: 'Y Coord.',
-                    stream: statusStream,
-                    value: 'y',
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     Expanded(
+          //       child: Container(
+          //         margin: const EdgeInsets.all(5),
+          //         child: DataBox(
+          //           name: 'X Coord.',
+          //           stream: statusStream,
+          //           value: 'x',
+          //         ),
+          //       ),
+          //     ),
+          //     Expanded(
+          //       child: Container(
+          //         margin: const EdgeInsets.all(5),
+          //         child: DataBox(
+          //           name: 'Y Coord.',
+          //           stream: statusStream,
+          //           value: 'y',
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -919,7 +917,7 @@ class VoltageBox extends StatelessWidget {
             margin: const EdgeInsets.all(5),
             height: 40,
             child: Text(
-              'VOLTAGE',
+              'PANEL VOLTAGE',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
