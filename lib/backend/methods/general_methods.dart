@@ -64,7 +64,6 @@ getData(String url) async {
         atmosphereController.add(jsonData['atmosphere']);
       }
       if (jsonData['soil']['id'] != nullData) {
-        saveSoilData(jsonData['soil']);
         soilController.add(jsonData['soil']);
       }
       if (jsonData['gas']['id'] != nullData) {

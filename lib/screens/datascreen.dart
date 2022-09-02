@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'generalwidgets.dart';
 import '../backend/classes.dart';
 import '../backend/methods/general_methods.dart';
 import '../backend/methods/saving_methods.dart';
-import 'generalwidgets.dart';
 import '../backend/theme.dart';
 
 int graphLayoutIndex = 0;
@@ -246,28 +246,11 @@ class SaveDataButton extends StatelessWidget {
             onTap: () {
               if (snapshot.hasData) {
                 if (data == 'soil') {
-                  Soil newSoil = Soil.fromJson(
-                    snapshot.data as Map<String, dynamic>,
-                  );
-                  newSoil.id = soilSamples.length + 1;
-                  newSoil.date = DateTime.now();
-                  soilSamples.add(newSoil);
+                  saveSoilData(snapshot.data as Map<String, dynamic>);
                 } else if (data == 'weights') {
-                  SoilWeight newWeight = SoilWeight.fromJson(
-                    snapshot.data as Map<String, dynamic>,
-                  );
-                  if (newWeight.weights.isNotEmpty) {
-                    newWeight.id = weightSamples.length + 1;
-                    newWeight.date = DateTime.now();
-                    weightSamples.add(newWeight);
-                  }
+                  saveWeightData(snapshot.data as Map<String, dynamic>);
                 } else if (data == 'voltage') {
-                  Voltage newVoltage = Voltage.fromJson(
-                    snapshot.data as Map<String, dynamic>,
-                  );
-                  newVoltage.id = savedVoltages.length + 1;
-                  newVoltage.date = DateTime.now();
-                  savedVoltages.add(newVoltage);
+                  saveVoltageData(snapshot.data as Map<String, dynamic>);
                 }
               }
             },
