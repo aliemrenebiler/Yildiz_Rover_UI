@@ -7,8 +7,6 @@ import '../backend/methods/saving_methods.dart';
 import 'generalwidgets.dart';
 import '../backend/theme.dart';
 
-int graphLayoutIndex = 0;
-
 class ArchiveScreen extends StatefulWidget {
   const ArchiveScreen({Key? key}) : super(key: key);
 
@@ -24,7 +22,6 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   @override
   void initState() {
     super.initState();
-    graphLayoutIndex = 0;
     refresh();
   }
 
