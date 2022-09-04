@@ -555,7 +555,7 @@ class StatusBox extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
-                    name: 'Battery Power (W)',
+                    name: 'Energy Cons. (W)',
                     stream: batteryStream,
                     value: 'power',
                   ),
