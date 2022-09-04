@@ -529,7 +529,7 @@ class StatusBox extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
-                    name: 'Battery Current (mA)',
+                    name: 'Battery Current (A)',
                     stream: batteryStream,
                     value: 'current',
                   ),
@@ -539,11 +539,30 @@ class StatusBox extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   child: DataBox(
-                    name: 'Battery Voltage (mV)',
+                    name: 'Battery Voltage (V)',
                     stream: batteryStream,
                     value: 'voltage',
                   ),
                 ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  child: DataBox(
+                    name: 'Battery Power (W)',
+                    stream: batteryStream,
+                    value: 'power',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(),
               ),
             ],
           ),
