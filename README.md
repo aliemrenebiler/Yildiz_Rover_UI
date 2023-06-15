@@ -1,6 +1,6 @@
 # Yildiz_Rover_UI
 
-Yıldız Rover is an interdisciplinary robotics team gathered under the university club SPARK (Space and Art Kitchen) which aims to promote Yıldız Technical University and Turkey on an international basis with their prudential projects. (More details on [here](https://rover.yildiz.edu.tr).)
+Yıldız Rover is an interdisciplinary robotics team gathered under the university club SPARK (Space and Art Kitchen) which aims to promote Yıldız Technical University and Turkey on an international basis with their prudential projects. ([More Details](https://rover.yildiz.edu.tr))
 
 Rover, a space exploration vehicle. It is designed to act in extreme conditions, produced to perform all specific tasks such as collecting information, examining samples, investigate the possibility of life.
 
